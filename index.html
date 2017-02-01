@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>轮播图</title>
+		<link href="css/style.css" rel="stylesheet" />
+		<script src="js/jquery-3.1.1.min.js"></script>
+		<script>
+			$(function() {
+				/*find方法是获取子元素 ,和$('#pic_list li')结果一样*/
+				var $aPicLi = $('#pic_list').find('li'); /*获取大图*/
+				var $aIcoLi = $('#ico_list').find('li'); /*获取小图*/				
+				var $aTextLi = $('#text_list').find('li'); /*获取文字栏*/
+				var $oBtnPrev = $('#btn_prev');
+				var $oBtnNext = $('#btn_next'); /*左右两个按钮*/
+				var timer = '';
+				var iNow = 0; /*小图索引*/
+				var iNowLeft = 0; /*底部小图整个ul向左移动的索引*/
+
+				/*点击小图切换图片*/
+				$aIcoLi.click(function() {
+					iNow = $(this).index(); /*保存当前小图的索引*/
+					tab();
+				})
+
+				/*轮播切换*/
+				function tab() {
+					$aIcoLi.attr('class', ''); //清空全部小图的样式
+					$aIcoLi.eq(iNow).attr('class', 'active'); //给当前小图添加样式
+
+					$aPicLi.css('display', 'none'); //隐藏全部大图
+					$aPicLi.eq(iNow).fadeIn('slow'); //显示当前大图
+
+					$aTextLi.find('h2').attr('class', ''); //隐藏全部文字栏
+					$aTextLi.eq(iNow).find('h2').attr('class', 'show'); //显示当前文字栏
+				}
+
+				/*按钮切换*/
+				//	点击下一张
+				$oBtnNext.click(function() {
+					iNowLeft++;
+					nextPage();
+					if(iNowLeft>$aIcoLi.length - 7){
+						iNowLeft=$aIcoLi.length - 7;
+					}
+				})
+				//	下一张按钮
+				function nextPage() {
+					$oBtnPrev.addClass('showBtn'); /*当点击下一张按钮的时候 上一张的按钮点亮*/
+					if(iNowLeft <= $aIcoLi.length - 7) {
+						$('#ico_list').find('ul').animate({
+							'left': -75 * iNowLeft
+						});  //底部ul向左移动 ，一个li的宽度是75px
+					}
+				}			
+				//点击上一张
+				$oBtnPrev.click(function() {					
+					prevPage();				
+				})
+				//		上一张按钮
+				function prevPage() {
+					if(iNowLeft > 0) {
+						iNowLeft--;
+						$('#ico_list').find('ul').animate({
+							'left': -75 * iNowLeft
+						});
+					}
+				}
+				
+				/*自动播放*/
+				timer = setInterval(autoPlay, 2000);
+				function autoPlay() {
+					iNow++;  //小图索引自增
+					if(iNow >= 7) {
+						iNowLeft++;
+						nextPage();
+					} /*当轮播完首页7张时 ，底部ul向左移动*/
+					if(iNow > 12) {
+						iNow = 0;
+						iNowLeft=0;
+						$('#ico_list').find('ul').animate({
+							'left': 0
+						});
+					}									
+					tab();
+				}
+
+				/*当鼠标hover到div上时停止轮播*/
+				//jQueryObject.hover( handlerIn , handlerOut )
+				//分别指定鼠标移入、移出元素时的事件处理函数
+				$('#box').hover(function() {
+					clearInterval(timer);
+				}, function() {
+					timer = setInterval(autoPlay, 2000)
+				})
+			})
+		</script>
+	</head>
+
+	<body>
+		<div id="box">
+			<!--	大图-->
+			<ul id="pic_list">
+				<li >
+					<img src="img/pic_1.jpg" />
+				</li>
+				<li>
+					<img src="img/pic_2.jpg" />
+				</li>
+				<li>
+					<img src="img/pic_3.jpg" />
+				</li>
+				<li>
+					<img src="img/pic_4.jpg" />
+				</li>
+				<li>
+					<img src="img/pic_5.jpg" />
+				</li>
+				<li>
+					<img src="img/pic_6.jpg" />
+				</li>
+				<li>
+					<img src="img/pic_7.jpg" />
+				</li>
+				<li>
+					<img src="img/pic_8.jpg" />
+				</li>
+				<li>
+					<img src="img/pic_9.jpg" />
+				</li>
+				<li>
+					<img src="img/pic_10.jpg" />
+				</li>
+				<li>
+					<img src="img/pic_11.jpg" />
+				</li>
+				<li>
+					<img src="img/pic_12.jpg" />
+				</li>
+				<li>
+					<img src="img/pic_13.jpg" />
+				</li>
+
+			</ul>
+			<!--<div class="mark"></div>-->
+
+			<!--文字-->
+			<ul id="text_list">
+				<li>
+					<h2 class="show">《无底洞》金钱、美女、权利、复仇等欲望让人不可自拔...</h2></li>
+				<li>
+					<h2>第八届中国（重庆）国际园林博览会</h2></li>
+				<li>
+					<h2>《巴黎宝贝》邓超巴黎当奶爸，上演基情、卖萌、跨国恋..</h2></li>
+				<li>
+					<h2>《我的女儿是花儿》[至3集]“富二代”冰王子恋上贫家女..</h2></li>
+				<li>
+					<h2>《法证先锋3》[至26集]写字楼惊现“女僵尸”尸体！</h2></li>
+				<li>
+					<h2>《非常了得》孟非郭德纲大曝台下私生活，内地Hold姐来挑战</h2></li>
+				<li>
+					<h2>第二届九分钟电影11月20日独家首映 视觉盛宴恭迎各位看官</h2></li>
+				<li>
+					<h2>《快女微电影》 洪辰脸伤痊愈 快女微电影收官作复拍</h2></li>
+				<li>
+					<h2>《称心如意》京城第一“育婴男”Hold住全场 萝莉热舞走光</h2></li>
+				<li>
+					<h2>《男人帮》[全30集]悲喜双响炮，一个完美结局</h2></li>
+				<li>
+					<h2>《辛亥革命》成龙、赵文瑄、李冰冰、胡歌演绎革命腥风血雨</h2></li>
+				<li>
+					<h2>《李献计历险记》房祖名患差时症为寻女友开启超时空冒险</h2></li>
+				<li>
+					<h2>Justin bieber女友动感热单全球首发。</h2></li>
+			</ul>
+
+			<!--小图-->
+			<div id="ico_list">
+				<ul>
+					<li class="active"><img src="img/ico_1.jpg" /></li>
+					<li><img src="img/ico_2.jpg" /></li>
+					<li><img src="img/ico_3.jpg" /></li>
+					<li><img src="img/ico_4.jpg" /></li>
+					<li><img src="img/ico_5.jpg" /></li>
+					<li><img src="img/ico_6.jpg" /></li>
+					<li><img src="img/ico_7.jpg" /></li>
+					<li><img src="img/ico_8.jpg" /></li>
+					<li><img src="img/ico_9.jpg" /></li>
+					<li><img src="img/ico_10.jpg" /></li>
+					<li><img src="img/ico_11.jpg" /></li>
+					<li><img src="img/ico_12.jpg" /></li>
+					<li><img src="img/ico_13.jpg" /></li>
+				</ul>
+			</div>
+
+			<!--左右两个按钮-->
+			<a href="#" id="btn_prev" class="btn"></a>
+			<a href="#" id="btn_next" class="btn showBtn"></a>
+		</div>
+	</body>
+
+</html>
